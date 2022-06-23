@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/anshgodha/Desktop/image-data-cv'
+make: Leaving directory `/Users/anshgodha/Desktop/image-data-cv'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+
