@@ -1,7 +1,7 @@
 {
   "cmake.configureOnOpen": true,
   "editor.formatOnSave": true,
-  "cmake.sourceDirectory": "${workspaceFolder}/.",
+  "cmake.sourceDirectory": "${workspaceFolder}/src",
   "files.associations": {
     "iostream": "cpp",
     "vector": "cpp"

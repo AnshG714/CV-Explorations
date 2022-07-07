@@ -1,0 +1,2 @@
+add_executable(basic_data_measures main.cpp)
+set_target_properties(basic_data_measures PROPERTIES OUTPUT_NAME basic_data_measures)

@@ -1,9 +1,9 @@
+#include "matplotlibcpp.h"
 #include <cmath>
 #include <filesystem>
 #include <opencv2/highgui.hpp>
 #include <opencv2/opencv.hpp>
 
-#include "matplotlibcpp.h"
 namespace plt = matplotlibcpp;
 
 using cv::Mat;

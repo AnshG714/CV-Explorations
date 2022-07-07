@@ -1,0 +1,2 @@
+add_library(image_processing histogram_equalization.cpp)
+target_include_directories(image_processing PUBLIC ${CMAKE_SOURCE_DIR})
