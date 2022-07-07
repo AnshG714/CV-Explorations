@@ -4,8 +4,9 @@ cmake_minimum_required(VERSION "3.13")
 # set project
 project(image-data-cv)
 
-# replace with your cmake/opencv path
+# replace with your cmake/opencv and python path
 set(OpenCV_DIR /Users/anshgodha/Developer/opencv/install/lib/cmake/opencv4)
+set(PYTHON_INCLUDE_DIR /Users/anshgodha/opt/anaconda3/include/)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package( OpenCV REQUIRED )
@@ -35,10 +36,3 @@ include_directories(SYSTEM ${matplotlib_SOURCE_DIR})
 link_libraries(${OpenCV_LIBS})
 
 add_subdirectory(src)
-
-# link python and numpy
-target_link_libraries(data_measure_img_seq
-    PRIVATE
-        ${PYTHON_LIBRARIES}
-        Python3::NumPy
-)
