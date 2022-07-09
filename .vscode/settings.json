@@ -4,6 +4,8 @@
   "cmake.sourceDirectory": "${workspaceFolder}/src",
   "files.associations": {
     "iostream": "cpp",
-    "vector": "cpp"
+    "vector": "cpp",
+    "ratio": "cpp",
+    "typeinfo": "cpp"
   }
 }

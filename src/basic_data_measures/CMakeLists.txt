@@ -1,2 +1,3 @@
 add_executable(basic_data_measures main.cpp)
+target_link_libraries(basic_data_measures image_processing)
 set_target_properties(basic_data_measures PROPERTIES OUTPUT_NAME basic_data_measures)

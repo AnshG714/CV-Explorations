@@ -4,6 +4,7 @@
 #include <iostream>
 #include <opencv2/highgui.hpp>
 #include <opencv2/opencv.hpp>
+#include <src/image_processing/histogram_equalization.hpp>
 #include <vector>
 
 using namespace cv;
@@ -113,9 +114,12 @@ int main(int argc, char **argv) {
 
   cv::namedWindow("Simple Demo", cv::WINDOW_AUTOSIZE);
   cv::setMouseCallback("Simple Demo", mouseMoveHandler, &img);
-
+  cv::cvtColor(img, img, cv::COLOR_BGR2GRAY);
   cv::imshow("Simple Demo", img);
-  displayImageHistograms(&img);
+  Mat img2 = img.clone();
+  histogram_equalize(&img2);
+  cv::imshow("Equalized", img2);
+  // displayImageHistograms(&img);
 
   cv::waitKey(0);
   cv::destroyAllWindows();
