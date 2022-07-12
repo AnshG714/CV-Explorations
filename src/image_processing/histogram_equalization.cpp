@@ -5,7 +5,7 @@
 using namespace cv;
 using namespace std;
 
-std::vector<float> compute_relative_frequences(Mat *img) {
+vector<float> compute_relative_frequences(Mat *img) {
   // we consider grayscale images.
   const int channels = 0;
   const int histogramDims = 1;
@@ -18,7 +18,7 @@ std::vector<float> compute_relative_frequences(Mat *img) {
   calcHist(img, 1, &channels, Mat(), hist, 1, &histSize, histRange, uniform,
            accumulate);
   hist /= sum(hist);
-  std::vector<float> cumsum;
+  vector<float> cumsum;
   float current_sum = 0;
   for (int i = 0; i < hist.rows; i++) {
     current_sum += (float)hist.at<float>(i);
@@ -30,7 +30,7 @@ std::vector<float> compute_relative_frequences(Mat *img) {
 
 void histogram_equalize(Mat *img) {
   // will need to change this for multi-channel images.
-  std::vector<float> relative_frequencies = compute_relative_frequences(img);
+  vector<float> relative_frequencies = compute_relative_frequences(img);
   for (int i = 0; i < img->rows; i++) {
     uint8_t *row = (uint8_t *)img->row(i).data;
     for (int j = 0; j < img->cols; j++) {
