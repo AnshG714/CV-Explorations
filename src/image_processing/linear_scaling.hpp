@@ -2,4 +2,4 @@
 
 using namespace cv;
 
-void histogram_equalize(Mat &src, Mat &dest);
+void linear_scaling(Mat &src, Mat &dest);

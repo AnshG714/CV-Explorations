@@ -1,5 +1,5 @@
 #include <opencv2/opencv.hpp>
-#include <src/image_processing/histogram_equalization.hpp>
+#include <src/image_processing/linear_scaling.hpp>
 #include <src/utils/load_resource.hpp>
 
 using namespace cv;
@@ -11,8 +11,8 @@ int main(int argc, char **argv) {
   cv::cvtColor(img, img, cv::COLOR_BGR2GRAY);
   cv::imshow("Initial Image", img);
   Mat img2 = img.clone();
-  histogram_equalize(img, img2);
-  cv::namedWindow("Histogram Equalized image", cv::WINDOW_AUTOSIZE);
-  cv::imshow("Histogram Equalized image", img2);
+  linear_scaling(img, img2);
+  cv::namedWindow("Linear scaled image", cv::WINDOW_AUTOSIZE);
+  cv::imshow("Linear scaled image", img2);
   cv::waitKey(0);
 }
