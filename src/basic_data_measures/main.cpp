@@ -110,16 +110,11 @@ int main(int argc, char **argv) {
     return -1;
   }
 
-  // rectangle(img, Point(50, 50), Point(300, 300), Scalar(255, 0, 0), 2, 8, 0);
-
   cv::namedWindow("Simple Demo", cv::WINDOW_AUTOSIZE);
   cv::setMouseCallback("Simple Demo", mouseMoveHandler, &img);
   cv::cvtColor(img, img, cv::COLOR_BGR2GRAY);
   cv::imshow("Simple Demo", img);
-  Mat img2 = img.clone();
-  histogram_equalize(&img2);
-  cv::imshow("Equalized", img2);
-  // displayImageHistograms(&img);
+  displayImageHistograms(&img);
 
   cv::waitKey(0);
   cv::destroyAllWindows();

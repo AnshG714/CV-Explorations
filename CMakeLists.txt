@@ -35,4 +35,9 @@ include_directories(SYSTEM ${matplotlib_SOURCE_DIR})
 # this in every target so it is simpler to use this directory-wide link.
 link_libraries(${OpenCV_LIBS})
 
+# add resources path
+add_definitions( -DRESOURCES_PATH="${CMAKE_CURRENT_SOURCE_DIR}/resources" )
+
+# add project subdirectories
 add_subdirectory(src)
+add_subdirectory(examples)

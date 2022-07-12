@@ -1,3 +1,4 @@
 add_subdirectory(basic_data_measures)
 add_subdirectory(data_measure_img_seq)
 add_subdirectory(image_processing)
+add_subdirectory(utils)
