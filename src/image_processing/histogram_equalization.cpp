@@ -1,23 +1,13 @@
 #include "histogram_equalization.hpp"
 #include <numeric>
 #include <opencv2/opencv.hpp>
+#include <src/metrics/metrics.hpp>
 
 using namespace cv;
 using namespace std;
 
 vector<float> compute_relative_frequences(Mat &src) {
-  // we consider grayscale images.
-  const int channels = 0;
-  const int histogramDims = 1;
-  const int histSize = 256;
-  float range[] = {0, 256};
-  const float *histRange[] = {range};
-  bool uniform = true, accumulate = false;
-
-  Mat hist;
-  calcHist(&src, 1, &channels, Mat(), hist, 1, &histSize, histRange, uniform,
-           accumulate);
-  hist /= sum(hist);
+  Mat hist = Metrics::calcHist(src, true);
   vector<float> cumsum;
   float current_sum = 0;
   for (int i = 0; i < hist.rows; i++) {

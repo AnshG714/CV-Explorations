@@ -6,6 +6,7 @@
     "iostream": "cpp",
     "vector": "cpp",
     "ratio": "cpp",
-    "typeinfo": "cpp"
+    "typeinfo": "cpp",
+    "ostream": "cpp"
   }
 }
