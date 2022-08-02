@@ -30,8 +30,7 @@ Mat _apply_median_filter(Mat &img, int kernel_size) {
   int kernel_radius = (kernel_size - 1) / 2;
   Mat padded_img(img.rows + 2 * kernel_radius, img.cols + 2 * kernel_radius,
                  CV_8UC1);
-  Mat ret_img(img.rows + 2 * kernel_radius, img.cols + 2 * kernel_radius,
-              CV_8UC1);
+  Mat ret_img(img.rows, img.cols, CV_8UC1);
 
   copyMakeBorder(img, padded_img, kernel_radius, kernel_radius, kernel_radius,
                  kernel_radius, BORDER_REPLICATE);
@@ -49,7 +48,7 @@ Mat _apply_median_filter(Mat &img, int kernel_size) {
           hist.at<float>((int)kernel_row[j + kernel_radius]) += 1;
         }
       }
-      ret_img.data[i * padded_img.rows + j] =
+      ret_img.data[(i - kernel_radius) * img.rows + (j - kernel_radius)] =
           _median_value_from_histogram(hist, kernel_size);
     }
   }
