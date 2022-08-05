@@ -1,10 +1,13 @@
 #include "smoothing.hpp"
+#include <math.h>
 #include <opencv2/opencv.hpp>
 #include <src/metrics/metrics.hpp>
 
 using namespace cv;
 using namespace std;
 
+namespace ImageProcessing {
+namespace Smoothing {
 uint8_t _median_value_from_histogram(Mat &histogram, int kernel_size) {
   const int total_readings = kernel_size * kernel_size;
   int acc = 0, ind = 0;
@@ -25,19 +28,18 @@ uint8_t _median_value_from_histogram(Mat &histogram, int kernel_size) {
 /**
  * Smooth image through the use of the median filter.
  */
-Mat _apply_median_filter(Mat &img, int kernel_size) {
+void MedianBlur(Mat &src, Mat &dst, int kernel_size) {
   assert(kernel_size % 2 == 1);
   int kernel_radius = (kernel_size - 1) / 2;
-  Mat padded_img(img.rows + 2 * kernel_radius, img.cols + 2 * kernel_radius,
+  Mat padded_img(src.rows + 2 * kernel_radius, src.cols + 2 * kernel_radius,
                  CV_8UC1);
-  Mat ret_img(img.rows, img.cols, CV_8UC1);
 
-  copyMakeBorder(img, padded_img, kernel_radius, kernel_radius, kernel_radius,
+  copyMakeBorder(src, padded_img, kernel_radius, kernel_radius, kernel_radius,
                  kernel_radius, BORDER_REPLICATE);
 
   Mat initialRoi, hist;
-  for (int i = kernel_radius; i < img.rows; i++) {
-    for (int j = kernel_radius; j < img.cols; j++) {
+  for (int i = kernel_radius; i < src.rows; i++) {
+    for (int j = kernel_radius; j < src.cols; j++) {
       if (j == kernel_radius) {
         initialRoi = padded_img(Rect(0, 0, kernel_size, kernel_size));
         hist = Metrics::calcHist(initialRoi);
@@ -48,12 +50,10 @@ Mat _apply_median_filter(Mat &img, int kernel_size) {
           hist.at<float>((int)kernel_row[j + kernel_radius]) += 1;
         }
       }
-      ret_img.data[(i - kernel_radius) * img.rows + (j - kernel_radius)] =
+      dst.data[(i - kernel_radius) * src.rows + (j - kernel_radius)] =
           _median_value_from_histogram(hist, kernel_size);
     }
   }
-
-  return ret_img;
 }
 
 /*
@@ -65,18 +65,39 @@ Mat _construct_box_filter(int k) {
   return Mat::ones(side_size, side_size, CV_64F) / (side_size * side_size);
 }
 
-Mat _apply_mean_filter(Mat &src, Mat &dst, int kernel_size) {
+void BoxBlur(Mat &src, Mat &dst, int kernel_size) {
   filter2D(src, dst, -1, _construct_box_filter(kernel_size));
-  return dst;
 }
 
-Mat smooth_image(Mat &src, Mat &dst, int kernel_size, const int smooth_type) {
-  switch (smooth_type) {
-  case SmoothingTypes::MEAN:
-    return _apply_mean_filter(src, dst, kernel_size);
-  case SmoothingTypes::MEDIAN:
-    return _apply_median_filter(src, kernel_size);
-  default:
-    return _apply_mean_filter(src, dst, kernel_size);
+Mat _construct_gaussian_filter(int ksize, double mean_x, double mean_y,
+                               double sigma) {
+  assert(ksize % 2 == 1 && ksize > 1);
+  Mat ret = Mat(ksize, ksize, CV_32F);
+  int origin_ind = ksize / 2;
+  float accum_sum = 0;
+  for (int i = 0; i < ksize; i++) {
+    float32_t *row = ret.ptr<float32_t>(i);
+    for (int j = 0; j < ksize; j++) {
+      int relative_x = j - origin_ind;
+      int relative_y = i - origin_ind;
+      float exp_numerator =
+          pow(relative_x - mean_x, 2) + pow(relative_y - mean_y, 2);
+      float exp_denominator = 2 * pow(sigma, 2);
+      float gaussian_coeff =
+          exp(-(exp_numerator / exp_denominator)) / (2 * M_PI * pow(sigma, 2));
+      accum_sum += gaussian_coeff;
+      row[j] = gaussian_coeff;
+    }
   }
+  ret /= accum_sum;
+  return ret;
 }
+
+void GaussianBlur(Mat &src, Mat &dst, int kernel_size, float mean_x,
+                  float mean_y, float sigma) {
+  filter2D(src, dst, -1,
+           _construct_gaussian_filter(kernel_size, mean_x, mean_y, sigma));
+}
+
+} // namespace Smoothing
+} // namespace ImageProcessing

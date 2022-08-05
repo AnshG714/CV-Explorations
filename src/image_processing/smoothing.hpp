@@ -2,8 +2,11 @@
 
 using namespace cv;
 
-enum SmoothingTypes { MEAN = 0, MEDIAN = 1 };
-
-Mat smooth_image(Mat &src, Mat &dst, int kernel_size,
-                 const int smooth_type = SmoothingTypes::MEAN);
-Mat _apply_median_filter(Mat &img, int kernel_size);
+namespace ImageProcessing {
+namespace Smoothing {
+void BoxBlur(Mat &src, Mat &dst, int kernel_size);
+void MedianBlur(Mat &src, Mat &dst, int kernel_size);
+void GaussianBlur(Mat &src, Mat &dst, int kernel_size, float mean_x,
+                  float mean_y, float sigma);
+} // namespace Smoothing
+} // namespace ImageProcessing

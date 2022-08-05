@@ -6,6 +6,8 @@
 using namespace cv;
 using namespace std;
 
+namespace ImageProcessing {
+namespace HistogramEqualization {
 vector<float> compute_relative_frequences(Mat &src) {
   Mat hist = Metrics::calcHist(src, true);
   vector<float> cumsum;
@@ -30,3 +32,5 @@ void histogram_equalize(Mat &src, Mat &dest) {
     }
   }
 }
+} // namespace HistogramEqualization
+} // namespace ImageProcessing
