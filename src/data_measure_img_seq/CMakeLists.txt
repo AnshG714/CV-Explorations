@@ -4,6 +4,6 @@ set_target_properties(data_measure_img_seq PROPERTIES OUTPUT_NAME data_measure_i
 # link python and numpy
 target_link_libraries(data_measure_img_seq
     PRIVATE
-        ${PYTHON_LIBRARIES}
+        ${PYTHON3_LIBRARIES}
         Python3::NumPy
 )

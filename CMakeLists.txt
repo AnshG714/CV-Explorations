@@ -1,6 +1,9 @@
 # set the minimum version
 cmake_minimum_required(VERSION "3.13")
 
+# cmake .. \
+# -DPYTHON_INCLUDE_DIR=$(python -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")  \
+# -DPYTHON_LIBRARY=$(python -c "import distutils.sysconfig as sysconfig; print(sysconfig.get_config_var('LIBDIR'))")
 # set project
 project(image-data-cv)
 
