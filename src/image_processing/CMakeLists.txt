@@ -4,6 +4,7 @@ add_library(
   linear_scaling.cpp linear_scaling.hpp
   smoothing.cpp smoothing.hpp
   sharpening.cpp sharpening.hpp
+  edge_detector.hpp edge_detector.cpp
 )
 
 target_link_libraries(image_processing metrics)

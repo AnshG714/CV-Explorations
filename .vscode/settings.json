@@ -7,6 +7,10 @@
     "vector": "cpp",
     "ratio": "cpp",
     "typeinfo": "cpp",
-    "ostream": "cpp"
+    "ostream": "cpp",
+    "algorithm": "cpp",
+    "__bit_reference": "cpp",
+    "deque": "cpp",
+    "type_traits": "cpp"
   }
 }
