@@ -11,6 +11,7 @@
     "algorithm": "cpp",
     "__bit_reference": "cpp",
     "deque": "cpp",
-    "type_traits": "cpp"
+    "type_traits": "cpp",
+    "utility": "cpp"
   }
 }

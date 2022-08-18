@@ -1,6 +1,7 @@
 #include "edge_detector.hpp"
 #include "smoothing.hpp"
 #include <opencv2/opencv.hpp>
+#include <set>
 
 using namespace cv;
 
@@ -74,9 +75,68 @@ void _apply_non_maxima_suppression(Mat &gradients, Mat &directions) {
   gradients = std::move(z);
 }
 
+void _follow(Mat &gradients, std::set<std::pair<int, int>> visited, int i,
+             int j, float low_gradient, float high_gradient) {
+
+  if (i < 0 || j < 0 || i >= gradients.rows || j >= gradients.cols) {
+    return;
+  }
+
+  visited.insert(std::make_pair(i, j));
+  for (int k = -1; k <= 1; k++) {
+    for (int l = -1; l <= 1; l++) {
+      float32_t neighbor_grad = gradients.ptr<float32_t>(i)[j];
+      if (visited.find(std::make_pair(i + k, j + l)) != visited.end() &&
+          neighbor_grad == low_gradient) {
+        gradients.ptr<float32_t>(i)[j] = high_gradient;
+        _follow(gradients, visited, i + k, j + l, low_gradient, high_gradient);
+      }
+    }
+  }
+
+  visited.erase(std::make_pair(i, j));
+}
+
+void _apply_hysteresis(Mat &gradients, float threshold1_ratio,
+                       float threshold2_ratio) {
+  Mat strength;
+  double max_gradient;
+  minMaxLoc(gradients, nullptr, &max_gradient);
+  double upper_threshold = max_gradient * threshold2_ratio;
+  double lower_threshold = upper_threshold * threshold1_ratio;
+  float low_gradient = 25;
+  float high_gradient = 255;
+
+  for (int i = 1; i < gradients.rows - 1; ++i) {
+    float32_t *row = gradients.ptr<float32_t>(i);
+    for (int j = 1; j < gradients.cols - 1; ++j) {
+      float32_t grad_magnitude = row[j];
+      if (grad_magnitude < lower_threshold) {
+        row[j] = 0;
+      } else if (lower_threshold <= grad_magnitude < upper_threshold) {
+        row[j] = low_gradient;
+      } else {
+        row[j] = high_gradient;
+      }
+    }
+  }
+
+  for (int i = 1; i < gradients.rows - 1; ++i) {
+    float32_t *row = gradients.ptr<float32_t>(i);
+    for (int j = 1; j < gradients.cols - 1; ++j) {
+      if (row[j] == low_gradient) {
+        row[j] = high_gradient;
+        std::set<std::pair<int, int>> recurse_set;
+        _follow(gradients, recurse_set, i, j, low_gradient, high_gradient);
+      }
+    }
+  }
+}
+
 void canny_detector(Mat &src, Mat &dst) {
   // first, smoothen
-  ImageProcessing::Smoothing::GaussianBlur(src, dst, 3, 0, 0, 1.5);
+  // ImageProcessing::Smoothing::GaussianBlur(src, dst, 5, 20, 20, 1.5);
+  cv::GaussianBlur(src, dst, cv::Size(5, 5), 1.5);
 
   // use Sobel operator for getting S_x and S_y
   Mat S_x, S_y;
@@ -94,6 +154,8 @@ void canny_detector(Mat &src, Mat &dst) {
 
   // Apply non-maxima suppression
   _apply_non_maxima_suppression(gradients, directions);
+  _apply_hysteresis(gradients, 0.1, 0.8);
+  dst = std::move(gradients);
 }
 
 } // namespace EdgeDetector
