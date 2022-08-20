@@ -5,6 +5,7 @@ add_library(
   smoothing.cpp smoothing.hpp
   sharpening.cpp sharpening.hpp
   edge_detector.hpp edge_detector.cpp
+  corner_detector.hpp corner_detector.cpp
 )
 
 target_link_libraries(image_processing metrics)
