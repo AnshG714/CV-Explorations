@@ -13,6 +13,6 @@ int main(int argc, char **argv) {
   Mat test = (Mat_<float>(2, 2) << 1.2, 1.9, 4.5, 3.4);
   Mat eigenvalues;
   eigen(test, eigenvalues);
-  cout << (float)eigenvalues.at<float>(1) << endl;
+  cout << trace(test) << endl;
   return 0;
 }
